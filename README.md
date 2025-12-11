@@ -1,4 +1,4 @@
-# 🌍 Générateur de Voyages IA
+# 🌍 WanderPlan AI
 
 Application Next.js fullstack pour la planification de voyages assistée par IA avec interface moderne Material-UI.
 
@@ -225,7 +225,7 @@ Si un programme correspondant est trouvé, il est retourné immédiatement avec 
 ## 🏗️ Structure du projet
 
 ```
-voyage-generator/
+wanderplan-ai/
 ├── app/
 │   ├── api/              # API routes Next.js
 │   │   ├── generate-plan/     # Génération avec cache

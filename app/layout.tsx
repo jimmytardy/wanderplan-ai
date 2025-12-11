@@ -3,12 +3,12 @@ import { Providers } from './providers'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Générateur de Voyages IA | Planifiez votre voyage personnalisé',
+  title: 'WanderPlan AI | Planifiez votre voyage personnalisé',
   description: 'Créez votre programme de voyage personnalisé en quelques clics grâce à l\'intelligence artificielle. Destinations, activités, restaurants et conseils pratiques.',
-  keywords: 'voyage, planification, IA, générateur de voyage, programme voyage, destination',
-  authors: [{ name: 'Voyage Generator' }],
+  keywords: 'voyage, planification, IA, générateur de voyage, programme voyage, destination, wanderplan',
+  authors: [{ name: 'WanderPlan AI' }],
   openGraph: {
-    title: 'Générateur de Voyages IA',
+    title: 'WanderPlan AI',
     description: 'Créez votre programme de voyage personnalisé avec l\'IA',
     type: 'website',
   },

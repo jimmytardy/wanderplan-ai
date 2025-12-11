@@ -74,7 +74,7 @@ Dans `.env`, pour Docker utilisez les noms de services :
 
 ```env
 # Base de données (utilisez "postgres" au lieu de "localhost")
-DATABASE_URL="postgresql://postgres:postgres@postgres:5432/voyage_generator?schema=public"
+DATABASE_URL="postgresql://postgres:postgres@postgres:5432/wanderplan_ai?schema=public"
 
 # Redis (utilisez "redis" au lieu de "localhost")
 REDIS_URL="redis://redis:6379"

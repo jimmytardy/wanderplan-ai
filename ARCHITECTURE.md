@@ -7,7 +7,7 @@ Application Next.js 14 fullstack avec App Router, utilisant TypeScript, Prisma, 
 ## Structure des dossiers
 
 ```
-voyage-generator/
+wanderplan-ai/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API Routes (backend)
 │   │   ├── generate-plan/     # Génération de programmes

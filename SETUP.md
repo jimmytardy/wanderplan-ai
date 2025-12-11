@@ -14,13 +14,13 @@ npm install
 2. Créer une base de données :
 
 ```sql
-CREATE DATABASE voyage_generator;
+CREATE DATABASE wanderplan_ai;
 ```
 
 3. Dans `.env`, configurer :
 
 ```
-DATABASE_URL="postgresql://user:password@localhost:5432/voyage_generator?schema=public"
+DATABASE_URL="postgresql://user:password@localhost:5432/wanderplan_ai?schema=public"
 ```
 
 ### Option B : PostgreSQL cloud (Supabase, Railway, etc.)

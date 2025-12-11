@@ -56,7 +56,7 @@ Ouvrez [http://localhost:3000](http://localhost:3000)
 ## 📝 Notes
 
 - Redis est optionnel : laissez `REDIS_URL` vide si non installé
-- Pour PostgreSQL local, créez d'abord la base : `CREATE DATABASE voyage_generator;`
+- Pour PostgreSQL local, créez d'abord la base : `CREATE DATABASE wanderplan_ai;`
 - Consultez `SETUP.md` pour un guide détaillé
 
 ## 🆘 Problème ?

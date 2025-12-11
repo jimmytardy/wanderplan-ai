@@ -85,7 +85,7 @@ export default function Home() {
             mb: 2,
           }}
         >
-          🌍 Générateur de Voyages IA
+          🌍 WanderPlan AI
         </Typography>
         <Typography
           variant="h2"
@@ -172,7 +172,7 @@ export default function Home() {
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          Générateur de voyages intelligent avec intelligence artificielle
+          WanderPlan AI - Planification de voyages intelligente avec IA
         </Typography>
       </Box>
     </Container>
