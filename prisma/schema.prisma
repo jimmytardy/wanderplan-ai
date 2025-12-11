@@ -1,0 +1,142 @@
+// Configuration Prisma pour PostgreSQL
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Modèle Admin pour l'authentification JWT
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String   // Hash bcrypt
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("admins")
+}
+
+// Modèle Destination
+model Destination {
+  id          String   @id @default(cuid())
+  name        String
+  country     String
+  city        String?
+  description String?  @db.Text
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  travelPlans TravelPlan[]
+  restaurants Restaurant[]
+  activities  Activity[]
+
+  @@map("destinations")
+}
+
+// Modèle Programme de voyage (jour par jour)
+model TravelPlan {
+  id          String   @id @default(cuid())
+  title       String
+  destinationId String
+  destination Destination @relation(fields: [destinationId], references: [id])
+  
+  // Données du programme (JSON structuré)
+  program     Json     // Structure jour par jour avec activités et restaurants
+  
+  // Métadonnées
+  duration    Int      // Nombre de jours
+  budget      String?  // Budget estimé
+  season      String?  // Saison recommandée
+  
+  // Statut pour SEO
+  isPublished Boolean  @default(false) // Si true, visible dans /api/examples
+  isExample   Boolean  @default(false) // Marqué comme exemple pour SEO
+  
+  // Feedback
+  feedbacks   Feedback[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([destinationId])
+  @@index([isPublished, isExample])
+  @@map("travel_plans")
+}
+
+// Modèle Restaurant
+model Restaurant {
+  id            String   @id @default(cuid())
+  name          String
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id])
+  
+  cuisine       String?  // Type de cuisine
+  priceRange    String?  // Budget (€, €€, €€€)
+  address       String?
+  rating        Float?   // Note sur 5
+  description   String?  @db.Text
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([destinationId])
+  @@map("restaurants")
+}
+
+// Modèle Activité
+model Activity {
+  id            String   @id @default(cuid())
+  name          String
+  destinationId String
+  destination   Destination @relation(fields: [destinationId], references: [id])
+  
+  type          String?  // Type d'activité (culture, nature, sport, etc.)
+  duration      String?  // Durée estimée
+  price         String?  // Prix ou gratuit
+  season        String?  // Saison recommandée
+  description   String?  @db.Text
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([destinationId, type])
+  @@map("activities")
+}
+
+// Modèle Feedback utilisateur
+model Feedback {
+  id          String   @id @default(cuid())
+  travelPlanId String
+  travelPlan  TravelPlan @relation(fields: [travelPlanId], references: [id])
+  
+  rating      Int      // Note de 1 à 5
+  comment     String?  @db.Text
+  email       String?  // Optionnel pour contact
+  
+  createdAt   DateTime @default(now())
+
+  @@index([travelPlanId])
+  @@map("feedbacks")
+}
+
+// Modèle pour les pages SEO générées
+model SeoPage {
+  id          String   @id @default(cuid())
+  slug        String   @unique // URL slug pour la page
+  title       String
+  content     String   @db.Text // Contenu HTML généré
+  metaDescription String? @db.Text
+  travelPlanId String?  // Optionnel : lié à un programme
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("seo_pages")
+}
+

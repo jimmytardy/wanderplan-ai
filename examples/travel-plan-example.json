@@ -1,0 +1,224 @@
+{
+  "title": "Voyage à Paris - 5 jours",
+  "days": [
+    {
+      "day": 1,
+      "date": "2024-06-15",
+      "activities": [
+        {
+          "name": "Arrivée et installation",
+          "time": "10:00",
+          "duration": "1h",
+          "description": "Check-in à l'hôtel et dépose des bagages",
+          "location": "Hôtel dans le Marais"
+        },
+        {
+          "name": "Visite de Notre-Dame et Île de la Cité",
+          "time": "14:00",
+          "duration": "2h",
+          "description": "Découverte de la cathédrale et de l'île historique",
+          "location": "Île de la Cité, 75004 Paris"
+        },
+        {
+          "name": "Promenade le long de la Seine",
+          "time": "16:30",
+          "duration": "1h30",
+          "description": "Balade romantique le long des quais",
+          "location": "Quais de Seine"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Le Comptoir du Relais",
+          "time": "12:30",
+          "cuisine": "Française",
+          "priceRange": "€€",
+          "address": "9 Carrefour de l'Odéon, 75006 Paris"
+        },
+        {
+          "name": "L'As du Fallafel",
+          "time": "19:00",
+          "cuisine": "Moyen-Orientale",
+          "priceRange": "€",
+          "address": "34 Rue des Rosiers, 75004 Paris"
+        }
+      ]
+    },
+    {
+      "day": 2,
+      "date": "2024-06-16",
+      "activities": [
+        {
+          "name": "Musée du Louvre",
+          "time": "09:00",
+          "duration": "4h",
+          "description": "Visite du plus grand musée du monde, voir la Joconde et la Vénus de Milo",
+          "location": "Rue de Rivoli, 75001 Paris"
+        },
+        {
+          "name": "Jardin des Tuileries",
+          "time": "14:00",
+          "duration": "1h",
+          "description": "Promenade dans le jardin royal",
+          "location": "Place de la Concorde, 75001 Paris"
+        },
+        {
+          "name": "Arc de Triomphe",
+          "time": "16:00",
+          "duration": "1h",
+          "description": "Montée au sommet pour une vue panoramique",
+          "location": "Place Charles de Gaulle, 75008 Paris"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Le Procope",
+          "time": "13:00",
+          "cuisine": "Française traditionnelle",
+          "priceRange": "€€",
+          "address": "13 Rue de l'Ancienne Comédie, 75006 Paris"
+        },
+        {
+          "name": "Le Relais de l'Entrecôte",
+          "time": "19:30",
+          "cuisine": "Steak-frites",
+          "priceRange": "€€",
+          "address": "20 Rue Saint-Benoît, 75006 Paris"
+        }
+      ]
+    },
+    {
+      "day": 3,
+      "date": "2024-06-17",
+      "activities": [
+        {
+          "name": "Tour Eiffel",
+          "time": "09:00",
+          "duration": "2h30",
+          "description": "Montée au 2ème étage (ou sommet) pour une vue imprenable",
+          "location": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris"
+        },
+        {
+          "name": "Croisière sur la Seine",
+          "time": "14:00",
+          "duration": "1h",
+          "description": "Découverte de Paris depuis la Seine",
+          "location": "Port de la Bourdonnais, 75007 Paris"
+        },
+        {
+          "name": "Musée d'Orsay",
+          "time": "16:00",
+          "duration": "2h",
+          "description": "Collection impressionniste dans une ancienne gare",
+          "location": "1 Rue de la Légion d'Honneur, 75007 Paris"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Café de Flore",
+          "time": "12:00",
+          "cuisine": "Brasserie",
+          "priceRange": "€€",
+          "address": "172 Boulevard Saint-Germain, 75006 Paris"
+        },
+        {
+          "name": "Le Train Bleu",
+          "time": "20:00",
+          "cuisine": "Française gastronomique",
+          "priceRange": "€€€",
+          "address": "Gare de Lyon, Place Louis-Armand, 75012 Paris"
+        }
+      ]
+    },
+    {
+      "day": 4,
+      "date": "2024-06-18",
+      "activities": [
+        {
+          "name": "Montmartre et Sacré-Cœur",
+          "time": "09:00",
+          "duration": "3h",
+          "description": "Visite du quartier artistique et de la basilique",
+          "location": "Montmartre, 75018 Paris"
+        },
+        {
+          "name": "Musée Rodin",
+          "time": "14:00",
+          "duration": "2h",
+          "description": "Sculptures dans un magnifique jardin",
+          "location": "77 Rue de Varenne, 75007 Paris"
+        },
+        {
+          "name": "Shopping aux Champs-Élysées",
+          "time": "17:00",
+          "duration": "2h",
+          "description": "Promenade shopping sur la plus belle avenue du monde",
+          "location": "Avenue des Champs-Élysées, 75008 Paris"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Le Consulat",
+          "time": "12:30",
+          "cuisine": "Française",
+          "priceRange": "€€",
+          "address": "18 Rue Norvins, 75018 Paris"
+        },
+        {
+          "name": "L'Ami Jean",
+          "time": "19:00",
+          "cuisine": "Bistrot moderne",
+          "priceRange": "€€€",
+          "address": "27 Rue Malar, 75007 Paris"
+        }
+      ]
+    },
+    {
+      "day": 5,
+      "date": "2024-06-19",
+      "activities": [
+        {
+          "name": "Marché aux Puces de Saint-Ouen",
+          "time": "09:00",
+          "duration": "2h",
+          "description": "Le plus grand marché aux puces du monde",
+          "location": "Rue des Rosiers, 93400 Saint-Ouen"
+        },
+        {
+          "name": "Parc des Buttes-Chaumont",
+          "time": "14:00",
+          "duration": "2h",
+          "description": "Dernière promenade dans un parc romantique",
+          "location": "1 Rue Botzaris, 75019 Paris"
+        },
+        {
+          "name": "Départ",
+          "time": "18:00",
+          "duration": "1h",
+          "description": "Retour à l'aéroport",
+          "location": "Aéroport"
+        }
+      ],
+      "restaurants": [
+        {
+          "name": "Brunch au marché",
+          "time": "11:00",
+          "cuisine": "Variée",
+          "priceRange": "€",
+          "address": "Marché aux Puces"
+        }
+      ]
+    }
+  ],
+  "budget": "1200-1500€ par personne",
+  "season": "Été",
+  "tips": [
+    "Achetez un Paris Pass pour économiser sur les musées",
+    "Réservez les restaurants à l'avance, surtout le soir",
+    "Utilisez le métro avec un pass Navigo",
+    "Évitez les heures de pointe (8h-9h, 17h-19h)",
+    "Gardez vos tickets de musée pour des réductions",
+    "Marchez autant que possible pour découvrir la ville"
+  ]
+}
+
