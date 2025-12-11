@@ -10,8 +10,10 @@ interface SearchCriteria {
   duration: number
   travelType?: string
   theme?: string
+  travelStyle?: string
   startDate?: string
   budget?: string
+  locale?: string
 }
 
 /**
@@ -22,7 +24,7 @@ export async function findSimilarTravelPlan(
   criteria: SearchCriteria
 ): Promise<any | null> {
   try {
-    const { destinationId, duration, travelType, theme, startDate, budget } =
+    const { destinationId, duration, travelType, theme, travelStyle, startDate, budget, locale } =
       criteria
 
     // Recherche basée sur les critères principaux
@@ -51,9 +53,18 @@ export async function findSimilarTravelPlan(
     let bestMatch = similarPlans[0]
 
     // Si on a des critères additionnels, chercher le meilleur match
-    if (travelType || theme || budget) {
+    if (travelType || theme || travelStyle || budget || locale) {
       for (const plan of similarPlans) {
         let score = 0
+
+        // Vérifier la langue (priorité haute - même langue = meilleur match)
+        if (locale && plan.program && typeof plan.program === 'object') {
+          const program = plan.program as any
+          const programLocale = program.locale || 'fr'
+          if (programLocale === locale) {
+            score += 5 // Très important pour le matching
+          }
+        }
 
         // Vérifier le thème dans le programme JSON
         if (theme && plan.program && typeof plan.program === 'object') {
@@ -61,6 +72,15 @@ export async function findSimilarTravelPlan(
           const programTheme = program.theme || program.title?.toLowerCase()
           if (programTheme?.includes(theme)) {
             score += 2
+          }
+        }
+
+        // Vérifier le style de voyage (classique/original/atypique)
+        if (travelStyle && plan.program && typeof plan.program === 'object') {
+          const program = plan.program as any
+          const programStyle = program.travelStyle || program.style || ''
+          if (programStyle.toLowerCase().includes(travelStyle.toLowerCase())) {
+            score += 3 // Plus important pour le matching
           }
         }
 

@@ -21,6 +21,7 @@ const generatePlanSchema = z.object({
   endDate: z.string().optional(),
   travelType: z.enum(['familial', 'romantique', 'entre-amis', 'solo', 'business']).optional(),
   theme: z.enum(['culture', 'nature', 'sport', 'gastronomie', 'luxe', 'detente']).optional(),
+  travelStyle: z.enum(['classique', 'original', 'atypique', 'melange']).optional(), // Style de voyage pour guider le choix des activités
   
   // Critères activités
   preferredActivities: z.array(z.string()).optional(),
@@ -47,6 +48,9 @@ const generatePlanSchema = z.object({
   
   // Budget global
   budget: z.string().optional(),
+  
+  // Langue pour la génération et le cache
+  locale: z.enum(['fr', 'en', 'pt', 'es', 'it']).optional(),
 })
 
 export async function POST(request: NextRequest) {
@@ -62,6 +66,7 @@ export async function POST(request: NextRequest) {
       endDate,
       travelType,
       theme,
+      travelStyle,
       preferredActivities,
       activitiesToAvoid,
       activityIntensity,
@@ -76,9 +81,13 @@ export async function POST(request: NextRequest) {
       preferredTime,
       weatherPreference,
       budget,
+      locale,
     } = validatedData
 
-    logger.info('Generating travel plan', { destinationId, duration })
+    // Déterminer la langue pour le prompt et la sauvegarde
+    const targetLocale = locale || 'fr'
+
+    logger.info('Generating travel plan', { destinationId, duration, locale: targetLocale })
 
     // Vérifier d'abord si un programme similaire existe déjà
     const existingPlan = await findSimilarTravelPlan({
@@ -86,8 +95,10 @@ export async function POST(request: NextRequest) {
       duration,
       travelType,
       theme,
+      travelStyle,
       startDate,
       budget,
+      locale: locale || 'fr',
     })
 
     if (existingPlan) {
@@ -122,11 +133,39 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Déterminer la langue pour le prompt
+    const languageMap: Record<string, string> = {
+      fr: 'français',
+      en: 'anglais',
+      pt: 'portugais',
+      es: 'espagnol',
+      it: 'italien',
+    }
+    const language = languageMap[targetLocale] || 'français'
+    
     // Construire le prompt détaillé pour l'IA avec tous les critères
-    let prompt = `Crée un programme de voyage détaillé de ${duration} jours pour ${destinationRecord.name} (${destinationRecord.country}).`
+    // Le prompt de base dépend de la langue
+    const promptBase: Record<string, string> = {
+      fr: `Crée un programme de voyage détaillé de ${duration} jours pour ${destinationRecord.name} (${destinationRecord.country}).`,
+      en: `Create a detailed ${duration}-day travel itinerary for ${destinationRecord.name} (${destinationRecord.country}).`,
+      pt: `Crie um roteiro de viagem detalhado de ${duration} dias para ${destinationRecord.name} (${destinationRecord.country}).`,
+      es: `Crea un itinerario de viaje detallado de ${duration} días para ${destinationRecord.name} (${destinationRecord.country}).`,
+      it: `Crea un itinerario di viaggio dettagliato di ${duration} giorni per ${destinationRecord.name} (${destinationRecord.country}).`,
+    }
+    let prompt = promptBase[targetLocale] || promptBase.fr
+    
+    // Ajouter l'instruction de langue
+    prompt += ` IMPORTANT: Generate all content (title, descriptions, tips) in ${language}.`
     
     if (startDate) {
-      prompt += ` Dates: du ${startDate}${endDate ? ` au ${endDate}` : ''}.`
+      const dateText: Record<string, string> = {
+        fr: ` Dates: du ${startDate}${endDate ? ` au ${endDate}` : ''}.`,
+        en: ` Dates: from ${startDate}${endDate ? ` to ${endDate}` : ''}.`,
+        pt: ` Datas: de ${startDate}${endDate ? ` até ${endDate}` : ''}.`,
+        es: ` Fechas: del ${startDate}${endDate ? ` al ${endDate}` : ''}.`,
+        it: ` Date: dal ${startDate}${endDate ? ` al ${endDate}` : ''}.`,
+      }
+      prompt += dateText[targetLocale] || dateText.fr
     }
     
     if (travelType) {
@@ -142,6 +181,16 @@ export async function POST(request: NextRequest) {
     
     if (theme) {
       prompt += ` Thème: ${theme}.`
+    }
+    
+    if (travelStyle) {
+      const styleMap: Record<string, string> = {
+        classique: 'voyage classique avec les sites et activités les plus connus et incontournables de la destination',
+        original: 'voyage original avec des activités moins connues mais intéressantes, en évitant les lieux trop touristiques',
+        atypique: 'voyage atypique avec des expériences hors du commun, des lieux secrets et des activités insolites',
+        melange: 'mélange équilibré entre sites classiques incontournables et expériences originales/atypiques',
+      }
+      prompt += ` Style de voyage: ${styleMap[travelStyle] || travelStyle}.`
     }
     
     if (budget) {
@@ -224,12 +273,15 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Enregistrer le programme en BDD
+    // Enregistrer le programme en BDD avec la langue
     const travelPlan = await prisma.travelPlan.create({
       data: {
         title: programData.title || `Voyage à ${destinationRecord.name}`,
         destinationId: destinationRecord.id,
-        program: programData,
+        program: {
+          ...programData,
+          locale: targetLocale, // Sauvegarder la langue dans le programme
+        },
         duration: duration,
         budget: budget || programData.budget || null,
         season: programData.season || null,

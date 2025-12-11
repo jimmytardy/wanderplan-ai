@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations, useLocale } from 'next-intl'
 import {
   Box,
   TextField,
@@ -23,7 +24,7 @@ import {
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { fr } from 'date-fns/locale'
+import { fr, enUS, ptBR, es, it, type Locale } from 'date-fns/locale'
 
 interface TravelFormProps {
   onSubmit: (data: any) => void
@@ -42,6 +43,7 @@ export function TravelForm({ onSubmit, loading }: TravelFormProps) {
   const [endDate, setEndDate] = useState<Date | null>(null)
   const [travelType, setTravelType] = useState('')
   const [theme, setTheme] = useState('')
+  const [travelStyle, setTravelStyle] = useState('')
   const [budget, setBudget] = useState('')
 
   // Critères activités
@@ -111,7 +113,9 @@ export function TravelForm({ onSubmit, loading }: TravelFormProps) {
       endDate: endDate ? endDate.toISOString().split('T')[0] : undefined,
       travelType: travelType || undefined,
       theme: theme || undefined,
+      travelStyle: travelStyle || undefined,
       budget: budget || undefined,
+      locale, // Ajouter la langue actuelle
       preferredActivities: preferredActivities.length > 0 ? preferredActivities : undefined,
       activitiesToAvoid: activitiesToAvoid.length > 0 ? activitiesToAvoid : undefined,
       activityIntensity: activityIntensity || undefined,
@@ -140,15 +144,25 @@ export function TravelForm({ onSubmit, loading }: TravelFormProps) {
   const transportOptions = ['velo', 'voiture', 'marche', 'transports-communs']
   const timeOptions = ['matin', 'apres-midi', 'soir', 'journee-complete']
 
+  // Adapter la locale pour les date pickers
+  const dateLocaleMap: Record<string, Locale> = {
+    fr: fr,
+    en: enUS,
+    pt: ptBR,
+    es: es,
+    it: it,
+  }
+  const dateLocale = dateLocaleMap[locale] || fr
+
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={dateLocale}>
       <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%' }}>
         <Grid container spacing={3}>
           {/* Critères de base */}
           <Grid item xs={12}>
             <Paper sx={{ p: 3 }}>
               <Typography variant="h6" gutterBottom>
-                1️⃣ Critères de base
+                {t('criteriaBase')}
               </Typography>
               <Divider sx={{ my: 2 }} />
 
@@ -163,8 +177,8 @@ export function TravelForm({ onSubmit, loading }: TravelFormProps) {
                 renderInput={(params) => (
                   <TextField
                     {...params}
-                    label="Destination *"
-                    placeholder="Recherchez une destination..."
+                    label={`${t('destination')} *`}
+                    placeholder={t('destinationPlaceholder')}
                     required
                   />
                 )}
@@ -229,6 +243,21 @@ export function TravelForm({ onSubmit, loading }: TravelFormProps) {
                       <MenuItem value="gastronomie">Gastronomie</MenuItem>
                       <MenuItem value="luxe">Luxe</MenuItem>
                       <MenuItem value="detente">Détente</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Style de voyage</InputLabel>
+                    <Select
+                      value={travelStyle}
+                      onChange={(e) => setTravelStyle(e.target.value)}
+                      label="Style de voyage"
+                    >
+                      <MenuItem value="classique">Classique (sites incontournables)</MenuItem>
+                      <MenuItem value="original">Original (activités moins connues)</MenuItem>
+                      <MenuItem value="atypique">Atypique (expériences insolites)</MenuItem>
+                      <MenuItem value="melange">Mélange (classique + original)</MenuItem>
                     </Select>
                   </FormControl>
                 </Grid>

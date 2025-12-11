@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
-import { Providers } from './providers'
-import './globals.css'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
+import { notFound } from 'next/navigation'
+import { Providers } from '../providers'
+import '../globals.css'
+import { locales } from '@/i18n'
 
 export const metadata: Metadata = {
   title: 'WanderPlan AI | Planifiez votre voyage personnalisé',
@@ -16,18 +20,34 @@ export const metadata: Metadata = {
   robots: 'index, follow',
 }
 
-export default function RootLayout({
+export function generateStaticParams() {
+  return locales.map((locale) => ({ locale }))
+}
+
+export default async function RootLayout({
   children,
+  params: { locale },
 }: {
   children: React.ReactNode
+  params: { locale: string }
 }) {
+  // Valider la locale
+  if (!locales.includes(locale as any)) {
+    notFound()
+  }
+
+  // Charger les messages pour la locale
+  const messages = await getMessages()
+
   return (
-    <html lang="fr">
+    <html lang={locale}>
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body>
-        <Providers>{children}</Providers>
+        <NextIntlClientProvider messages={messages}>
+          <Providers>{children}</Providers>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

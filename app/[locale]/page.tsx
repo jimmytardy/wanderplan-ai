@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations, useLocale } from 'next-intl'
 import {
   Container,
   Typography,
@@ -14,8 +15,11 @@ import { TravelForm } from '@/components/TravelForm'
 import { TravelResult } from '@/components/TravelResult'
 import { AdminPanel } from '@/components/AdminPanel'
 import { LoginDialog } from '@/components/LoginDialog'
+import { LanguageSwitcher } from '@/components/LanguageSwitcher'
 
 export default function Home() {
+  const t = useTranslations('Home')
+  const locale = useLocale()
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
@@ -33,11 +37,17 @@ export default function Home() {
     setError(null)
     setResult(null)
 
+    // Ajouter la langue dans les données
+    const dataWithLocale = {
+      ...formData,
+      locale,
+    }
+
     try {
       const response = await fetch('/api/generate-plan', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(dataWithLocale),
       })
 
       const data = await response.json()
@@ -85,7 +95,7 @@ export default function Home() {
             mb: 2,
           }}
         >
-          🌍 WanderPlan AI
+          🌍 {t('title')}
         </Typography>
         <Typography
           variant="h2"
@@ -96,19 +106,22 @@ export default function Home() {
             mb: 3,
           }}
         >
-          Créez votre programme de voyage personnalisé en quelques clics
+          {t('subtitle')}
         </Typography>
       </Box>
 
-      {/* Admin Panel */}
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'flex-end' }}>
-        {authToken ? (
-          <AdminPanel token={authToken} onLogout={handleLogout} />
-        ) : (
-          <Button variant="outlined" onClick={() => setLoginOpen(true)}>
-            Connexion Admin
-          </Button>
-        )}
+      {/* Admin Panel et Language Switcher */}
+      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <LanguageSwitcher />
+        <Box>
+          {authToken ? (
+            <AdminPanel token={authToken} onLogout={handleLogout} />
+          ) : (
+            <Button variant="outlined" onClick={() => setLoginOpen(true)}>
+              {t('adminLogin')}
+            </Button>
+          )}
+        </Box>
       </Box>
 
       <LoginDialog
@@ -134,7 +147,6 @@ export default function Home() {
             background: 'linear-gradient(135deg, rgba(102, 126, 234, 0.05) 0%, rgba(118, 75, 162, 0.05) 100%)',
           }}
         >
-
           {/* Erreur */}
           {error && (
             <Alert severity="error" sx={{ mb: 3 }}>
@@ -153,7 +165,7 @@ export default function Home() {
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: 4 }}>
               <CircularProgress />
               <Typography sx={{ ml: 2, alignSelf: 'center' }}>
-                Génération de votre programme...
+                {t('generating')}
               </Typography>
             </Box>
           )}
@@ -172,9 +184,10 @@ export default function Home() {
         }}
       >
         <Typography variant="body2" color="text.secondary">
-          WanderPlan AI - Planification de voyages intelligente avec IA
+          {t('footer')}
         </Typography>
       </Box>
     </Container>
   )
 }
+

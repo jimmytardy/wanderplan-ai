@@ -88,8 +88,11 @@ Suivez les instructions pour créer votre premier administrateur.
 
 ## Étape 7 : (Optionnel) Peupler avec des données d'exemple
 
+⚠️ **ATTENTION**: Ne jamais exécuter en production !
+
 ```bash
-npm run seed
+# En développement uniquement
+FORCE_SEED=true npm run seed
 ```
 
 ## Étape 8 : Lancer l'application

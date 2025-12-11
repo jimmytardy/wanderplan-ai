@@ -57,6 +57,7 @@ Ouvrez [http://localhost:3000](http://localhost:3000)
 
 - Redis est optionnel : laissez `REDIS_URL` vide si non installé
 - Pour PostgreSQL local, créez d'abord la base : `CREATE DATABASE wanderplan_ai;`
+- ⚠️ Le script `seed` ne fonctionne qu'en développement (protection contre l'exécution en production)
 - Consultez `SETUP.md` pour un guide détaillé
 
 ## 🆘 Problème ?

@@ -31,8 +31,8 @@ export async function generateTravelPlan(prompt: string): Promise<string> {
       messages: [
         {
           role: 'system',
-          content: `Tu es un expert en planification de voyages. 
-          Génère des programmes de voyage détaillés au format JSON avec cette structure :
+          content: `You are a travel planning expert. 
+          Generate detailed travel itineraries in JSON format with this structure:
           {
             "title": "Titre du voyage",
             "days": [

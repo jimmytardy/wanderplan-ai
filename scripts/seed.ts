@@ -1,13 +1,49 @@
 /**
  * Script de seed pour peupler la base de données avec des données d'exemple
- * Usage: npx tsx scripts/seed.ts
+ * ⚠️ ATTENTION: Ne pas exécuter en production !
+ * 
+ * Protections en place:
+ * - Vérifie que NODE_ENV !== 'production'
+ * - Requiert FORCE_SEED=true pour s'exécuter
+ * 
+ * Usage (développement uniquement):
+ *   FORCE_SEED=true npm run seed
+ *   ou
+ *   FORCE_SEED=true npx tsx scripts/seed.ts
  */
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
 async function main() {
+  // Protection 1: Vérifier l'environnement
+  const nodeEnv = process.env.NODE_ENV || 'development'
+  
+  if (nodeEnv === 'production') {
+    console.error('❌ ERREUR: Ce script ne doit PAS être exécuté en production!')
+    console.error('   Pour forcer l\'exécution, définissez NODE_ENV=development')
+    console.error('   Mais ATTENTION: ne le faites jamais en production!')
+    process.exit(1)
+  }
+
+  // Protection 2: Demander confirmation explicite
+  const forceSeed = process.env.FORCE_SEED === 'true'
+  
+  if (!forceSeed) {
+    console.warn('⚠️  ATTENTION: Ce script va insérer des données d\'exemple dans la base de données.')
+    console.warn('   Ces données sont destinées au DÉVELOPPEMENT et aux TESTS uniquement.')
+    console.warn('')
+    console.warn('   Pour continuer, définissez FORCE_SEED=true')
+    console.warn('   Exemple: FORCE_SEED=true npm run seed')
+    console.warn('')
+    console.warn('   ⚠️  Ne JAMAIS exécuter en production!')
+    process.exit(1)
+  }
+
   console.log('🌱 Seeding database...\n')
+  console.log(`   Environnement: ${nodeEnv}`)
+  console.log(`   FORCE_SEED: ${forceSeed}`)
+  console.log('')
 
   // Créer des destinations
   const paris = await prisma.destination.upsert({
@@ -120,6 +156,7 @@ async function main() {
   console.log('✅ Activités créées')
 
   console.log('\n🎉 Seeding terminé!')
+  console.log('   ⚠️  Rappel: Ces données sont pour le développement uniquement')
 }
 
 main()
@@ -130,4 +167,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect()
   })
-

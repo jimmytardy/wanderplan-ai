@@ -55,8 +55,9 @@ docker-compose exec app npx prisma db push
 # Créer un admin
 docker-compose exec app npm run create-admin
 
-# (Optionnel) Seed avec des données d'exemple
-docker-compose exec app npm run seed
+# (Optionnel) Seed avec des données d'exemple (DÉVELOPPEMENT UNIQUEMENT)
+# ⚠️ Ne jamais exécuter en production !
+FORCE_SEED=true docker-compose exec app npm run seed
 ```
 
 4. **Accéder à l'application**
