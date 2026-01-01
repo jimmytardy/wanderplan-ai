@@ -2,7 +2,7 @@
 
 ## Vue d'ensemble
 
-Application Next.js 14 fullstack avec App Router, utilisant TypeScript, Prisma, OpenAI, et Redis.
+Application Next.js 16 fullstack avec App Router, utilisant TypeScript, Prisma, OpenAI, et Redis.
 
 ## Structure des dossiers
 
@@ -145,7 +145,7 @@ Middleware vérifie token (lib/middleware.ts)
 ### Ajouter un modèle
 
 1. Modifier `prisma/schema.prisma`
-2. Exécuter `npm run db:push`
+2. Exécuter `pnpm db:push`
 3. Utiliser `prisma` dans le code
 
 ### Modifier le modèle IA
@@ -170,7 +170,7 @@ Middleware vérifie token (lib/middleware.ts)
 - Redis : Upstash, Redis Cloud
 
 ### Autres plateformes
-- Build : `npm run build`
-- Start : `npm start`
+- Build : `pnpm build`
+- Start : `pnpm start`
 - Variables d'environnement requises
 

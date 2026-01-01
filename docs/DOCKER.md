@@ -33,11 +33,11 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 docker-compose exec app npx prisma db push
 
 # Créer un admin
-docker-compose exec app npm run create-admin
+docker-compose exec app pnpm create-admin
 
 # (Optionnel) Ajouter des données d'exemple (DÉVELOPPEMENT UNIQUEMENT)
 # ⚠️ Ne jamais exécuter en production !
-FORCE_SEED=true docker-compose exec app npm run seed
+FORCE_SEED=true docker-compose exec app pnpm seed
 ```
 
 ## ✅ Vérification
@@ -112,5 +112,4 @@ docker-compose up -d
 ## 📚 Documentation complète
 
 Voir `.docker/README.md` pour plus de détails.
-
 

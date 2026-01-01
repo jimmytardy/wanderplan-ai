@@ -1,0 +1,303 @@
+# WanderPlan AI - Cursor Rules
+
+## 🎯 Vue d'ensemble du projet
+
+Application Next.js 14 fullstack avec App Router pour la planification de voyages assistée par IA. Stack technique : TypeScript, Prisma (PostgreSQL), OpenAI, Redis, Material-UI, next-intl.
+
+## 📁 Structure du projet
+
+### Organisation des fichiers
+
+- `app/` : Next.js App Router
+  - `app/api/` : Routes API backend (route.ts)
+  - `app/[locale]/` : Pages frontend avec internationalisation
+  - `app/layout.tsx` : Layout principal
+  - `app/globals.css` : Styles globaux
+  - `app/theme.ts` : Configuration Material-UI
+  - `app/providers.tsx` : Providers React (MUI, i18n)
+
+- `lib/` : Bibliothèques et utilitaires partagés
+  - `prisma.ts` : Client Prisma singleton (pattern globalThis)
+  - `redis.ts` : Client Redis (optionnel, fallback gracieux)
+  - `ai.ts` : Service IA avec abstraction multi-provider (OpenAI, Gemini, etc.)
+  - `ai/` : Abstraction des providers d'IA
+    - `types.ts` : Interfaces et types pour les providers
+    - `factory.ts` : Factory pour instancier le provider configuré
+    - `providers/` : Implémentations des providers (OpenAI, Gemini, etc.)
+  - `jwt.ts` : Utilitaires JWT
+  - `middleware.ts` : Middleware authentification admin
+  - `logger.ts` : Système de logging structuré
+  - `cache-service.ts` : Service de cache intelligent BDD
+  - `seo-service.ts` : Service décision SEO
+  - `constants.ts` : Constantes partagées
+
+- `components/` : Composants React réutilisables
+  - Composants client-side avec `'use client'`
+  - Utilisation de Material-UI pour l'UI
+
+- `prisma/` : Schéma de base de données
+  - `schema.prisma` : Modèles Prisma
+
+- `types/` : Types TypeScript partagés
+  - `index.ts` : Interfaces et types communs
+
+- `scripts/` : Scripts utilitaires (Node.js/TypeScript)
+  - Exécutés avec `tsx`
+
+- `messages/` : Fichiers de traduction next-intl
+  - Format JSON par locale (fr, en, pt, es, it)
+
+- `docs/` : Documentation centralisée
+  - `ARCHITECTURE.md` : Architecture du projet
+  - `SETUP.md` : Guide d'installation détaillé
+  - `DOCKER.md` : Guide Docker complet
+  - `QUICKSTART.md` : Démarrage rapide
+
+## 🔧 Technologies et dépendances
+
+### Core
+- **Next.js 14** : App Router, Server Components par défaut
+- **TypeScript** : Mode strict activé
+- **React 18** : Server/Client Components
+
+### Backend
+- **Prisma** : ORM PostgreSQL (singleton pattern)
+- **IA Multi-provider** : Abstraction pour OpenAI, Gemini, etc. (configurable via `AI_PROVIDER`)
+  - **OpenAI** : API GPT-4/GPT-3.5-turbo (par défaut)
+  - **Gemini** : Google Gemini (optionnel, nécessite `@google/generative-ai`)
+- **Redis** : Cache optionnel (fallback si indisponible)
+- **JWT** : Authentification admin (jsonwebtoken)
+- **bcryptjs** : Hash mots de passe
+
+### Frontend
+- **Material-UI (MUI)** : Composants UI
+- **next-intl** : Internationalisation (5 locales)
+- **date-fns** : Manipulation dates
+
+### Validation & Utils
+- **Zod** : Validation de schémas (toujours valider les inputs API)
+- **date-fns** : Dates et locales
+
+## 📝 Conventions de code
+
+### TypeScript
+
+- **Mode strict** : Toujours activé
+- **Types explicites** : Éviter `any`, utiliser `unknown` si nécessaire
+- **Interfaces** : Définir dans `types/index.ts` pour types partagés
+- **Imports** : Utiliser alias `@/` pour imports absolus (configuré dans tsconfig.json)
+
+### API Routes (app/api/*/route.ts)
+
+```typescript
+// Structure standard d'une route API
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
+import { prisma } from '@/lib/prisma'
+import { logger } from '@/lib/logger'
+
+// 1. Définir schéma Zod pour validation
+const schema = z.object({ ... })
+
+// 2. Exporter fonction HTTP (GET, POST, etc.)
+export async function POST(request: NextRequest) {
+  try {
+    // 3. Parser et valider le body
+    const body = await request.json()
+    const validatedData = schema.parse(body)
+    
+    // 4. Logique métier
+    // ...
+    
+    // 5. Retourner NextResponse.json avec format standard
+    return NextResponse.json({
+      success: true,
+      data: { ... }
+    })
+  } catch (error) {
+    // 6. Gestion d'erreurs avec logger
+    logger.error('Error message', error)
+    
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { success: false, error: 'Données invalides', details: error.errors },
+        { status: 400 }
+      )
+    }
+    
+    return NextResponse.json(
+      { success: false, error: error.message || 'Erreur' },
+      { status: 500 }
+    )
+  }
+}
+```
+
+### Authentification Admin
+
+- Utiliser `requireAdmin()` de `lib/middleware.ts` pour routes protégées
+- Token JWT dans header `Authorization: Bearer <token>`
+- Vérifier l'existence de l'admin en BDD après vérification token
+
+### Base de données (Prisma)
+
+- **Toujours utiliser** `prisma` depuis `lib/prisma.ts` (singleton)
+- **Index** : Ajouter sur colonnes fréquemment queryées
+- **Relations** : Définir dans schema.prisma
+- **Migrations** : Utiliser `npm run db:push` pour développement, `db:migrate` pour production
+
+### Cache
+
+- **Redis** : Optionnel, toujours prévoir fallback si indisponible
+- **Cache BDD** : Vérifier d'abord en BDD avant appel IA (via `cache-service.ts`)
+- **TTL** : 24h pour programmes, 12h pour contenu custom
+
+### Logging
+
+- Utiliser `logger` depuis `lib/logger.ts`
+- Niveaux : `info`, `warn`, `error`, `debug`
+- Format : `logger.info('Message', { data })`
+- Debug uniquement en développement
+
+### Internationalisation (i18n)
+
+- **Locales supportées** : fr, en, pt, es, it
+- **Locale par défaut** : fr
+- Utiliser `useTranslations()` et `useLocale()` dans composants client
+- Messages dans `messages/{locale}.json`
+- Routes avec `[locale]` dans App Router
+
+### Composants React
+
+- **Server Components par défaut** : Pas de `'use client'` sauf si nécessaire
+- **Client Components** : Ajouter `'use client'` en première ligne
+- **Material-UI** : Utiliser composants MUI pour UI
+- **Props** : Définir interfaces TypeScript pour props
+
+### Validation
+
+- **Toujours valider** les inputs API avec Zod
+- Schémas Zod dans les routes API
+- Messages d'erreur en français (ou selon locale)
+- Retourner erreurs de validation avec status 400
+
+### Gestion d'erreurs
+
+- Try/catch dans toutes les routes API
+- Logger les erreurs avec `logger.error()`
+- Retourner format standard : `{ success: boolean, error?: string, data?: T }`
+- Status HTTP appropriés (400, 401, 404, 500)
+
+## 🔒 Sécurité
+
+1. **Validation** : Toujours valider avec Zod avant traitement
+2. **Authentification** : JWT pour routes admin, vérifier token + existence admin
+3. **Mots de passe** : Hash bcrypt (10 rounds minimum)
+4. **SQL Injection** : Prisma ORM (préparé statements automatiques)
+5. **Variables d'environnement** : Secrets dans `.env`, jamais en code
+6. **CORS** : Géré par Next.js
+
+## 🎨 UI/UX
+
+- **Material-UI** : Utiliser composants MUI pour cohérence
+- **Responsive** : Mobile-first, design adaptatif
+- **Thème** : Personnalisé dans `app/theme.ts`
+- **Accessibilité** : Respecter standards ARIA
+
+## 🚀 Performance
+
+- **Cache** : Vérifier BDD avant appel IA
+- **Redis** : Cache optionnel pour requêtes lourdes
+- **Index BDD** : Sur colonnes fréquemment queryées
+- **SSG/SSR** : Next.js pour pages SEO
+
+## 📦 Scripts pnpm
+
+- `pnpm dev` : Développement
+- `pnpm build` : Build production (génère Prisma client)
+- `pnpm db:push` : Push schéma Prisma (dev)
+- `pnpm db:migrate` : Migration Prisma (prod)
+- `pnpm create-admin` : Créer admin
+- `pnpm seed` : Seed données (dev uniquement)
+
+## 🐳 Docker
+
+- Support Docker avec docker-compose
+- `Dockerfile` pour production
+- `Dockerfile.dev` pour développement
+- Variables d'environnement dans `.env`
+
+## 📋 Format de données
+
+### Réponse API standard
+
+```typescript
+{
+  success: boolean
+  data?: T
+  error?: string
+  details?: any
+}
+```
+
+### Programme de voyage (JSON)
+
+```typescript
+{
+  title: string
+  days: Array<{
+    day: number
+    date?: string
+    activities: Array<{
+      name: string
+      time: string
+      duration: string
+      description?: string
+      location?: string
+    }>
+    restaurants: Array<{
+      name: string
+      time: string
+      cuisine?: string
+      priceRange?: string
+      address?: string
+    }>
+  }>
+  budget?: string
+  tips?: string[]
+  locale?: string // Langue du programme
+}
+```
+
+## 🔄 Patterns à suivre
+
+1. **Singleton** : Prisma et Redis (via globalThis en dev)
+2. **Abstraction IA** : Utiliser l'interface `AIProvider` pour ajouter de nouveaux providers
+3. **Validation** : Zod pour tous les inputs
+4. **Cache intelligent** : Vérifier BDD avant IA
+5. **Logging structuré** : Utiliser logger avec contexte
+6. **Gestion d'erreurs** : Try/catch + logger + format standard
+7. **Internationalisation** : Support 5 locales, messages dans JSON
+8. **Type safety** : TypeScript strict, éviter `any`
+
+## ⚠️ À éviter
+
+- ❌ Ne pas utiliser `any` en TypeScript
+- ❌ Ne pas oublier la validation Zod
+- ❌ Ne pas créer plusieurs instances Prisma
+- ❌ Ne pas exposer secrets dans le code
+- ❌ Ne pas oublier le logging d'erreurs
+- ❌ Ne pas hardcoder les messages (utiliser i18n)
+- ❌ Ne pas oublier le fallback si Redis indisponible
+- ❌ Ne pas appeler directement les SDKs d'IA (utiliser l'abstraction `AIProvider`)
+
+## 📚 Références
+
+Toute la documentation est centralisée dans le répertoire `docs/` :
+
+- Architecture : `docs/ARCHITECTURE.md`
+- Setup : `docs/SETUP.md`
+- Docker : `docs/DOCKER.md`
+- Quickstart : `docs/QUICKSTART.md`
+- Documentation technique : `lib/ai/README.md` (abstraction des providers d'IA)
+

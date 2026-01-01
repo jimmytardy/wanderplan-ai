@@ -15,7 +15,7 @@ services:
       - /app/.next
     environment:
       NODE_ENV: development
-    command: npm run dev
+    command: pnpm dev
     ports:
       - "${APP_PORT:-3000}:3000"
 

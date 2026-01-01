@@ -3,7 +3,7 @@
 ## Étape 1 : Installation des dépendances
 
 ```bash
-npm install
+pnpm install
 ```
 
 ## Étape 2 : Configuration PostgreSQL
@@ -72,16 +72,16 @@ Laissez `REDIS_URL` vide dans `.env`. Le cache sera désactivé mais l'applicati
 
 ```bash
 # Générer le client Prisma
-npm run db:generate
+pnpm db:generate
 
 # Créer les tables
-npm run db:push
+pnpm db:push
 ```
 
 ## Étape 6 : Créer un admin
 
 ```bash
-npm run create-admin
+pnpm create-admin
 ```
 
 Suivez les instructions pour créer votre premier administrateur.
@@ -92,13 +92,13 @@ Suivez les instructions pour créer votre premier administrateur.
 
 ```bash
 # En développement uniquement
-FORCE_SEED=true npm run seed
+FORCE_SEED=true pnpm seed
 ```
 
 ## Étape 8 : Lancer l'application
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
@@ -135,7 +135,7 @@ Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
 ```bash
 # Réinitialiser Prisma
 rm -rf node_modules/.prisma
-npm run db:generate
+pnpm run db:generate
 ```
 
 ## 📚 Ressources

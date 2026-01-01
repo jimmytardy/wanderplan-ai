@@ -4,7 +4,7 @@ Application Next.js fullstack pour la planification de voyages assistée par IA 
 
 ## ✨ Fonctionnalités
 
-- ✈️ **Génération automatique** de programmes de voyage via IA (GPT-4)
+- ✈️ **Génération automatique** de programmes de voyage via IA
 - 🎨 **Interface moderne** avec Material-UI (MUI) - Design responsive et mobile-first
 - 🔍 **Recherche intelligente** de destinations avec autocomplete
 - 💾 **Cache intelligent** - Vérifie la BDD avant d'appeler l'IA pour économiser les coûts
@@ -36,12 +36,12 @@ Modifiez `.env` avec vos clés (au minimum `OPENAI_API_KEY` et `JWT_SECRET`).
 
 ```bash
 # Production
-npm run docker:up
+pnpm run docker:up
 # ou
 docker-compose up -d
 
 # Développement (avec hot-reload)
-npm run docker:dev
+pnpm run docker:dev
 # ou
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 ```
@@ -53,11 +53,11 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
 docker-compose exec app npx prisma db push
 
 # Créer un admin
-docker-compose exec app npm run create-admin
+docker-compose exec app pnpm create-admin
 
 # (Optionnel) Seed avec des données d'exemple (DÉVELOPPEMENT UNIQUEMENT)
 # ⚠️ Ne jamais exécuter en production !
-FORCE_SEED=true docker-compose exec app npm run seed
+FORCE_SEED=true docker-compose exec app pnpm seed
 ```
 
 4. **Accéder à l'application**
@@ -65,17 +65,17 @@ FORCE_SEED=true docker-compose exec app npm run seed
 L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
 
 **Commandes Docker utiles :**
-- `npm run docker:logs` - Voir les logs
-- `npm run docker:down` - Arrêter les services
+- `pnpm run docker:logs` - Voir les logs
+- `pnpm run docker:down` - Arrêter les services
 - `docker-compose exec app sh` - Accéder au shell du conteneur
 
-📚 **Voir [DOCKER.md](./DOCKER.md) pour plus de détails sur Docker**
+📚 **Voir [DOCKER.md](./docs/DOCKER.md) pour plus de détails sur Docker**
 
 ### Option 2 : Installation locale
 
 ### Prérequis
 
-- Node.js 18+ et npm/yarn
+- Node.js 20.9+ et pnpm
 - PostgreSQL (base de données)
 - Redis (optionnel, pour le cache)
 - Clé API OpenAI
@@ -85,7 +85,7 @@ L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
 1. **Cloner et installer les dépendances**
 
 ```bash
-npm install
+pnpm install
 ```
 
 2. **Configurer les variables d'environnement**
@@ -100,25 +100,25 @@ cp env.example .env
 
 ```bash
 # Générer le client Prisma
-npm run db:generate
+pnpm db:generate
 
 # Créer les tables en base
-npm run db:push
+pnpm db:push
 
 # Ou utiliser les migrations
-npm run db:migrate
+pnpm db:migrate
 ```
 
 4. **Créer un admin initial**
 
 ```bash
-npm run create-admin
+pnpm create-admin
 ```
 
 5. **Lancer le serveur de développement**
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 L'application sera accessible sur [http://localhost:3000](http://localhost:3000)
@@ -310,7 +310,7 @@ L'interface frontend (`/`) permet de tester tous les endpoints interactivement a
 
 ### Avec Docker (Recommandé)
 
-Voir [DOCKER.md](./DOCKER.md) pour le guide complet.
+Voir [DOCKER.md](./docs/DOCKER.md) pour le guide complet.
 
 ```bash
 docker-compose up -d
@@ -326,16 +326,18 @@ docker-compose up -d
 
 ### Autres plateformes
 
-- Build : `npm run build`
-- Start : `npm start`
+- Build : `pnpm build`
+- Start : `pnpm start`
 
 ## 📚 Technologies
 
-- **Next.js 14** : Framework React fullstack avec App Router
+- **Next.js 16** : Framework React fullstack avec App Router
 - **TypeScript** : Typage statique
 - **Material-UI (MUI)** : Interface utilisateur moderne
 - **Prisma** : ORM pour PostgreSQL
-- **OpenAI API** : Génération IA (GPT-4)
+- **IA Multi-provider** : Abstraction pour basculer entre OpenAI, Gemini, etc.
+  - **OpenAI API** : Génération IA (GPT-4) - Par défaut
+  - **Google Gemini** : Alternative (optionnel)
 - **Redis** : Cache (optionnel)
 - **JWT** : Authentification
 - **Zod** : Validation de schémas
@@ -343,10 +345,15 @@ docker-compose up -d
 
 ## 📖 Documentation
 
-- [DOCKER.md](./DOCKER.md) - Guide Docker complet
-- [SETUP.md](./SETUP.md) - Guide d'installation détaillé
-- [QUICKSTART.md](./QUICKSTART.md) - Démarrage rapide
-- [ARCHITECTURE.md](./ARCHITECTURE.md) - Architecture du projet
+Toute la documentation est centralisée dans le répertoire [`docs/`](./docs/) :
+
+- [QUICKSTART.md](./docs/QUICKSTART.md) - Démarrage rapide (5 minutes)
+- [SETUP.md](./docs/SETUP.md) - Guide d'installation détaillé
+- [DOCKER.md](./docs/DOCKER.md) - Guide Docker complet
+- [ARCHITECTURE.md](./docs/ARCHITECTURE.md) - Architecture du projet
+
+Documentation technique :
+- [lib/ai/README.md](./lib/ai/README.md) - Guide de l'abstraction des providers d'IA
 
 ## 🤝 Contribution
 
@@ -360,7 +367,7 @@ MIT
 
 En cas de problème :
 
-1. Consultez la [documentation Docker](./DOCKER.md)
+1. Consultez la [documentation Docker](./docs/DOCKER.md)
 2. Vérifiez les logs : `docker-compose logs -f`
 3. Ouvrez une issue sur GitHub
 

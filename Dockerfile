@@ -1,5 +1,5 @@
 # Dockerfile pour l'application Next.js
-FROM node:18-alpine AS base
+FROM node:20-alpine AS base
 
 # Installer les dépendances uniquement si nécessaire
 FROM base AS deps
@@ -7,9 +7,12 @@ FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
+# Installer pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Copier les fichiers de dépendances
-COPY package.json package-lock.json* ./
-RUN npm ci
+COPY package.json pnpm-lock.yaml* ./
+RUN pnpm install --frozen-lockfile
 
 # Rebuild le code source uniquement si nécessaire
 FROM base AS builder
@@ -24,7 +27,7 @@ RUN npx prisma generate
 # Définir la variable d'environnement pour le build
 ENV NEXT_TELEMETRY_DISABLED 1
 
-RUN npm run build
+RUN pnpm build
 
 # Image de production, copier tous les fichiers et exécuter next
 FROM base AS runner

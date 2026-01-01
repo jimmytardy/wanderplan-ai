@@ -17,7 +17,7 @@ echo "✅ Base de données prête!"
 # Optionnel: Seed la base de données
 if [ "$SEED_DB" = "true" ]; then
   echo "🌱 Seeding de la base de données..."
-  npm run seed
+  pnpm seed
 fi
 
 echo "✨ Initialisation terminée!"

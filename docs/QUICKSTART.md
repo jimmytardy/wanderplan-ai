@@ -5,7 +5,7 @@
 ### 1. Installer les dépendances
 
 ```bash
-npm install
+pnpm install
 ```
 
 ### 2. Configurer l'environnement
@@ -24,20 +24,20 @@ cp env.example .env
 ### 3. Initialiser la base de données
 
 ```bash
-npm run db:generate
-npm run db:push
+pnpm run db:generate
+pnpm run db:push
 ```
 
 ### 4. Créer un admin
 
 ```bash
-npm run create-admin
+pnpm run create-admin
 ```
 
 ### 5. Lancer l'application
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
 Ouvrez [http://localhost:3000](http://localhost:3000)
@@ -58,7 +58,7 @@ Ouvrez [http://localhost:3000](http://localhost:3000)
 - Redis est optionnel : laissez `REDIS_URL` vide si non installé
 - Pour PostgreSQL local, créez d'abord la base : `CREATE DATABASE wanderplan_ai;`
 - ⚠️ Le script `seed` ne fonctionne qu'en développement (protection contre l'exécution en production)
-- Consultez `SETUP.md` pour un guide détaillé
+- Consultez [SETUP.md](./SETUP.md) pour un guide détaillé
 
 ## 🆘 Problème ?
 

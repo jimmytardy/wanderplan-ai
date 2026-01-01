@@ -7,9 +7,9 @@
  * - Requiert FORCE_SEED=true pour s'exécuter
  * 
  * Usage (développement uniquement):
- *   FORCE_SEED=true npm run seed
+ *   FORCE_SEED=true pnpm seed
  *   ou
- *   FORCE_SEED=true npx tsx scripts/seed.ts
+ *   FORCE_SEED=true pnpm tsx scripts/seed.ts
  */
 import { PrismaClient } from '@prisma/client'
 
@@ -34,7 +34,7 @@ async function main() {
     console.warn('   Ces données sont destinées au DÉVELOPPEMENT et aux TESTS uniquement.')
     console.warn('')
     console.warn('   Pour continuer, définissez FORCE_SEED=true')
-    console.warn('   Exemple: FORCE_SEED=true npm run seed')
+    console.warn('   Exemple: FORCE_SEED=true pnpm seed')
     console.warn('')
     console.warn('   ⚠️  Ne JAMAIS exécuter en production!')
     process.exit(1)
